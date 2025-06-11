@@ -1,0 +1,49 @@
+import cv2
+import numpy as np
+def encrypt_image(image_path, key):
+    image = cv2.imread(image_path)
+    if image is None:
+        print("Error: Could not open the image. Please check the file name or path.")
+        return
+    key_array = np.full_like(image, key, dtype=np.uint8)
+    encrypted = cv2.bitwise_xor(image, key_array)
+    cv2.imwrite("encrypted.png", encrypted)
+    print("Image has been encrypted and saved as 'encrypted.png'.")
+def decrypt_image(image_path, key):
+    image = cv2.imread(image_path)
+    if image is None:
+        print("Error: Could not open the image. Please check the file name or path.")
+        return
+    key_array = np.full_like(image, key, dtype=np.uint8)
+    decrypted = cv2.bitwise_xor(image, key_array)
+    cv2.imwrite("decrypted.png", decrypted)
+    print("Image has been decrypted and saved as 'decrypted.png'.")
+def main():
+    print("Image Encryption Tool")
+    print("1. Encrypt Image")
+    print("2. Decrypt Image")
+    choice = input("Enter your choice (1 or 2): ")
+    if choice == "1":
+        path = input("Enter the image file name to encrypt (example: sample.png): ").strip()
+        try:
+            key = int(input("Enter an encryption key between 0 and 255: "))
+            if 0 <= key <= 255:
+                encrypt_image(path, key)
+            else:
+                print("The key must be between 0 and 255.")
+        except ValueError:
+            print("Invalid input. Please enter a number between 0 and 255.")
+    elif choice == "2":
+        path = input("Enter the encrypted image file name (exampleee: encrypted.png): ").strip()
+        try:
+            key = int(input("Enter the same encryption key used before: "))
+            if 0 <= key <= 255:
+                decrypt_image(path, key)
+            else:
+                print("The key must be between 0 and 255.")
+        except ValueError:
+            print("Invalid input. Please enter a number between 0 and 255.")
+    else:
+        print("Invalid choice. Please enter either 1 or 2.")
+if __name__ == "__main__":
+    main()
